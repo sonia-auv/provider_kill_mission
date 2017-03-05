@@ -10,7 +10,7 @@ class ProviderKillMission:
     def __init__(self):
 
 
-        rospy.subscriber('/interface_rs485/communication_data', SendRS485Msg, self.communication_data_callback)
+        rospy.subscriber('/interface_rs485/communication_data', SendRS485Msg, self.communication_data_callback) 
 
         self.publisher_mission = rospy.publisher('/provider_kill_mission/mission_switch_msg',MissionSwitchMsg,queue_size=10)
 
