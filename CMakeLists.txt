@@ -52,7 +52,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 file(GLOB msg_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/srv/"
     "${CMAKE_CURRENT_SOURCE_DIR}/msg/*.msg")
+file(GLOB srv_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/srv/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/srv/*.srv")
 add_message_files(DIRECTORY msg FILES ${msg_files})
+add_service_files(DIRECTORY srv FILES ${srv_files})
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs sensor_msgs )
 ## Generate services in the 'srv' folder
