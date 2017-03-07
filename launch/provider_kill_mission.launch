@@ -1,0 +1,5 @@
+<launch>
+	<node name="provider_kill_mission" pkg="provider_kill_mission" type="provider_kill_mission_file.py" output="screen">
+  </node>
+
+</launch>
