@@ -4,11 +4,14 @@ import rospy
 from interface_rs485.msg import SendRS485Msg
 from provider_kill_mission.msg import MissionSwitchMsg, KillSwitchMsg
 from provider_kill_mission.srv import OverrideMissionSwitch, SetMissionSwitch, OverrideMissionSwitchResponse, \
-    SetMissionSwitchResponse
+    SetMissionSwitchResponse, GetOverrideMissionSwitch, GetOverrideMissionSwitchResponse, GetMissionSwitch, \
+    GetMissionSwitchResponse, GetKillSwitch, GetKillSwitchResponse
 
 
 class ProviderKillMission:
     override_state = False
+    mission_switch_state = False
+    kill_state = False
 
     def __init__(self):
 
@@ -21,6 +24,11 @@ class ProviderKillMission:
 
         rospy.Service('/provider_kill_mission/override_mission_switch', OverrideMissionSwitch,
                       self._override_mission_switch_callback)
+        rospy.Service('/provider_kill_mission/get_override_mission_switch_state', GetOverrideMissionSwitch,
+                      self._get_override_mission_switch_state)
+        rospy.Service('/provider_kill_mission/get_mission_switch_state', GetMissionSwitch,
+                      self._get_mission_switch_state)
+        rospy.Service('/provider_kill_mission/get_kill_switch_state', GetKillSwitch, self._get_kill_switch_state)
         rospy.Service('/provider_kill_mission/set_mission_switch', SetMissionSwitch, self._set_mission_switch_callback)
 
     def communication_data_callback(self, data):
@@ -29,11 +37,22 @@ class ProviderKillMission:
             if data.cmd == SendRS485Msg.CMD_KILLMISSION_mission:
                 self.publish_mission_switch_state(data.data[0] == 1)
             elif data.cmd == SendRS485Msg.CMD_KILLMISSION_kill:
+                self.kill_state = data.data[0] == 1
                 killmsg = KillSwitchMsg()
-                killmsg.state = data.data[0] == 1
+                killmsg.state = self.kill_state
                 self.publisher_kill.publish(killmsg)
 
+    def _get_override_mission_switch_state(self, req):
+        return GetOverrideMissionSwitchResponse(int(self.override_state))
+
+    def _get_kill_switch_state(self, req):
+        return GetKillSwitchResponse(int(self.kill_state))
+
+    def _get_mission_switch_state(self, req):
+        return GetMissionSwitchResponse(int(self.mission_switch_state))
+
     def publish_mission_switch_state(self, state):
+        self.mission_switch_state = state
         missionmsg = MissionSwitchMsg()
         missionmsg.state = state
         self.publisher_mission.publish(missionmsg)
