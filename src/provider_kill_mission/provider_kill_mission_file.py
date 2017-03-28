@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import struct
 
 from interface_rs485.msg import SendRS485Msg
 from provider_kill_mission.msg import MissionSwitchMsg, KillSwitchMsg
@@ -38,15 +39,14 @@ class ProviderKillMission:
             self.rs485_pub.publish(slave=0x20, cmd=0x01, data=[0x92, 0x93, 0x94, 0x92, 0x93, 0x94])
             rate.sleep()
 
-
-
     def communication_data_callback(self, data):
         self.mission_switch_data = data.slave
+        dataBytes = list(struct.unpack("{}B".format(1), data.data))
         if data.slave == SendRS485Msg.SLAVE_killMission:
             if data.cmd == SendRS485Msg.CMD_KILLMISSION_mission:
-                self.publish_mission_switch_state(data.data[0] == 1)
+                self.publish_mission_switch_state(dataBytes[0] == 1)
             elif data.cmd == SendRS485Msg.CMD_KILLMISSION_kill:
-                self.kill_state = data.data[0] == 1
+                self.kill_state = dataBytes[0] == 1
                 kill_msg = KillSwitchMsg()
                 kill_msg.state = self.kill_state
                 self.publisher_kill.publish(kill_msg)
