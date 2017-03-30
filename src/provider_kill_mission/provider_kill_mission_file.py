@@ -33,19 +33,19 @@ class ProviderKillMission:
         rospy.Service('/provider_kill_mission/get_kill_switch_state', GetKillSwitch, self._get_kill_switch_state)
         rospy.Service('/provider_kill_mission/set_mission_switch', SetMissionSwitch, self._set_mission_switch_callback)
 
-        rate = rospy.Rate(100)
+        rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            self.rs485_pub.publish(slave=0x20, cmd=0x00, data=[0x00])
-            self.rs485_pub.publish(slave=0x20, cmd=0x01, data=[0x00])
+            self.rs485_pub.publish(slave=SendRS485Msg.SLAVE_killMission, cmd=SendRS485Msg.CMD_MISSION, data=[0x00])
+            self.rs485_pub.publish(slave=SendRS485Msg.SLAVE_killMission, cmd=SendRS485Msg.CMD_KILL, data=[0x00])
             rate.sleep()
 
     def communication_data_callback(self, data):
         self.mission_switch_data = data.slave
         dataBytes = list(struct.unpack("{}B".format(1), data.data))
         if data.slave == SendRS485Msg.SLAVE_killMission:
-            if data.cmd == SendRS485Msg.CMD_KILLMISSION_mission:
+            if data.cmd == SendRS485Msg.CMD_MISSION:
                 self.publish_mission_switch_state(dataBytes[0] == 1)
-            elif data.cmd == SendRS485Msg.CMD_KILLMISSION_kill:
+            elif data.cmd == SendRS485Msg.CMD_KILL:
                 self.kill_state = dataBytes[0] == 1
                 kill_msg = KillSwitchMsg()
                 kill_msg.state = self.kill_state
