@@ -42,8 +42,8 @@ class ProviderKillMission:
 
     def communication_data_callback(self, data):
         self.mission_switch_data = data.slave
-        dataBytes = list(struct.unpack("{}B".format(1), data.data))
         if data.slave == SendRS485Msg.SLAVE_killMission:
+            dataBytes = list(struct.unpack("{}B".format(1), data.data))
             if data.cmd == SendRS485Msg.CMD_MISSION:
                 self.publish_mission_switch_state(dataBytes[0] == 1)
             elif data.cmd == SendRS485Msg.CMD_KILL:
