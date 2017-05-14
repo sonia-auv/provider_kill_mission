@@ -17,12 +17,13 @@ class ProviderKillMission:
     def __init__(self):
 
         rospy.Subscriber('/interface_rs485/dataTx', SendRS485Msg, self.communication_data_callback)
-        self.rs485_pub = rospy.Publisher("/interface_rs485/dataRx", SendRS485Msg, queue_size=10)
+        self.rs485_pub = rospy.Publisher("/interface_rs485/dataRx", SendRS485Msg, queue_size=1000)
 
         self.publisher_mission = rospy.Publisher('/provider_kill_mission/mission_switch_msg', MissionSwitchMsg,
-                                                 queue_size=10)
+                                                 queue_size=1000)
 
-        self.publisher_kill = rospy.Publisher('/provider_kill_mission/kill_switch_msg', KillSwitchMsg, queue_size=10)
+        self.publisher_kill = rospy.Publisher('/provider_kill_mission/kill_switch_msg',
+					      KillSwitchMsg, queue_size=1000)
 
         rospy.Service('/provider_kill_mission/override_mission_switch', OverrideMissionSwitch,
                       self._override_mission_switch_callback)
