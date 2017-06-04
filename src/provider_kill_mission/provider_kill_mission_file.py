@@ -22,8 +22,7 @@ class ProviderKillMission:
         self.publisher_mission = rospy.Publisher('/provider_kill_mission/mission_switch_msg', MissionSwitchMsg,
                                                  queue_size=1000)
 
-        self.publisher_kill = rospy.Publisher('/provider_kill_mission/kill_switch_msg',
-					      KillSwitchMsg, queue_size=1000)
+        self.publisher_kill = rospy.Publisher('/provider_kill_mission/kill_switch_msg', KillSwitchMsg, queue_size=1000)
 
         rospy.Service('/provider_kill_mission/override_mission_switch', OverrideMissionSwitch,
                       self._override_mission_switch_callback)
@@ -34,7 +33,7 @@ class ProviderKillMission:
         rospy.Service('/provider_kill_mission/get_kill_switch_state', GetKillSwitch, self._get_kill_switch_state)
         rospy.Service('/provider_kill_mission/set_mission_switch', SetMissionSwitch, self._set_mission_switch_callback)
 
-        rate = rospy.Rate(3)
+        rate = rospy.Rate(1)
         while not rospy.is_shutdown():
             self.rs485_pub.publish(slave=SendRS485Msg.SLAVE_killMission, cmd=SendRS485Msg.CMD_MISSION, data=[0x00])
             self.rs485_pub.publish(slave=SendRS485Msg.SLAVE_killMission, cmd=SendRS485Msg.CMD_KILL, data=[0x00])
