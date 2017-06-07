@@ -108,7 +108,7 @@ namespace provider_kill_mission {
 
                 publish_mission_switch_state(data == 1);
 
-            }else if (receiveData->cmd == receiveData->CMD_MISSION){
+            }else if (receiveData->cmd == receiveData->SLAVE_killMission){
                 kill_state = data;
                 kill_msg.state = kill_state;
 
