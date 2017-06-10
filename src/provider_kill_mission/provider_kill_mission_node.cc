@@ -1,5 +1,5 @@
 /**
- * \file	provider_power_node.cc
+ * \file	provider_kill_mission_node.cc
  * \author	Olivier Lavoie <olavoie0795@gmail.com>
  * \date	03/2017
  *
