@@ -104,7 +104,7 @@ namespace provider_kill_mission {
 
             data = receiveData->data[0];
 
-            if (receiveData->cmd == receiveData->CMD_MISSION){
+            if (receiveData->cmd == receiveData->CMD_MISSION && ! override_state){
 
                 publish_mission_switch_state(data == 1);
 
@@ -125,9 +125,16 @@ namespace provider_kill_mission {
 
         provider_kill_mission::MissionSwitchMsg missionmsg;
         mission_switch_state = data;
+        last_mission_switch_state = mission_switch_state;
 
-        missionmsg.state = data;
-        publisher_mission_.publish(missionmsg);
+        if ( ! std::abs(last_mission_switch_state - mission_switch_state )) {
+
+            missionmsg.state = data;
+            publisher_mission_.publish(missionmsg);
+
+        }
+
+
 
     }
 

@@ -102,6 +102,7 @@ namespace provider_kill_mission {
 
         bool override_state = false;
         bool mission_switch_state = false;
+        bool last_mission_switch_state = false;
         bool kill_state = false;
 
 
