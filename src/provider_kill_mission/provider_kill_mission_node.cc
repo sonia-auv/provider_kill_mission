@@ -125,17 +125,15 @@ namespace provider_kill_mission {
 
         provider_kill_mission::MissionSwitchMsg missionmsg;
         mission_switch_state = data;
-        last_mission_switch_state = mission_switch_state;
 
-        if ( ! std::abs(last_mission_switch_state - mission_switch_state )) {
+        if ( std::abs(last_mission_switch_state - mission_switch_state )) {
 
             missionmsg.state = data;
             publisher_mission_.publish(missionmsg);
 
         }
 
-
-
+        last_mission_switch_state = mission_switch_state;
     }
 
     bool ProviderKillMissionNode::get_override_mission_switch_state(
@@ -143,6 +141,7 @@ namespace provider_kill_mission {
             provider_kill_mission::GetOverrideMissionSwitch::Response &res) {
 
         res.state = override_state;
+
         return true;
 
 
