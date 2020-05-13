@@ -1,9 +1,16 @@
 FROM ros:melodic-robot
 
-
+ARG BUILD_DATE
+ARG VERSION
 ARG SONIA_USER=sonia
 ARG SONIA_UID=50000
 ARG MODULE_NAME=provider_kill_mission
+
+LABEL maintainer="club.sonia@etsmtl.net"
+LABEL net.etsmtl.sonia-auv.build-date=${BUILD_DATE}
+LABEL net.etsmtl.sonia-auv.version=${VERSION}
+LABEL net.etsmtl.sonia-auv.name=${MODULE_NAME}
+
 
 ENV SONIA_HOME=/home/${SONIA_USER}
 ENV SONIA_WS=${SONIA_HOME}/ros_sonia_ws/
@@ -15,27 +22,19 @@ ENV LAUNCH_FILE=${MODULE_NAME}.launch
 ENV ENTRYPOINT_FILE=sonia_entrypoint.sh
 
 ENV ROS_WS_SETUP=/opt/ros/${ROS_DISTRO}/setup.bash
-ENV SONIA_WS_SETUP=/test/devel/setup.bash
+ENV SONIA_WS_SETUP=${SONIA_HOME}/ros_sonia_ws/devel/setup.bash
 
 RUN useradd --uid ${SONIA_UID} --create-home ${SONIA_USER}
+RUN bash -c 'mkdir -p ${SONIA_WS}/{launch,msg,script,src,srv}'
 
-USER ${SONIA_USER}
-WORKDIR ${SONIA_HOME}
+WORKDIR ${SONIA_WS}
 
-# COPY ./launch/${LAUNCH_FILE} ${LAUNCH_FILE}
-# COPY ./script/${ENTRYPOINT_FILE} /${ENTRYPOINT_FILE}
-
-
-
-RUN mkdir test
-WORKDIR test
-RUN mkdir src
-
-
-# COPY pfe_sandbox_nodelet1 src/pfe_sandbox_nodelet1
-# COPY pfe_sandbox_nodelet2 src/pfe_sandbox_nodelet2
-COPY launching_file.launch launching_file.launch
-COPY sonia_entrypoint.sh sonia_entrypoint.sh
+COPY . ${MODULE_PATH}
 RUN /bin/bash -c "source ${ROS_WS_SETUP}; catkin_make"
-ENTRYPOINT ["/test/sonia_entrypoint.sh"]
-CMD ["roslaunch", "launching_file.launch"]
+
+RUN chown -R ${SONIA_USER}: ${SONIA_WS}
+USER ${SONIA_USER}
+
+#TODO: Review ENTRYPOINT + CMD path
+ENTRYPOINT ["/home/sonia/ros_sonia_ws/provider_kill_mission/script/sonia_entrypoint.sh"]
+CMD ["roslaunch", "/home/sonia/ros_sonia_ws/provider_kill_mission/launch/provider_kill_mission.launch"]
