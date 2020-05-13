@@ -30,7 +30,7 @@ RUN bash -c 'mkdir -p ${SONIA_WS}/{launch,msg,script,src,srv}'
 WORKDIR ${SONIA_WS}
 
 COPY . ${MODULE_PATH}
-RUN /bin/bash -c "source ${ROS_WS_SETUP}; catkin_make"
+RUN bash -c "source ${ROS_WS_SETUP}; catkin_make"
 
 RUN chown -R ${SONIA_USER}: ${SONIA_WS}
 USER ${SONIA_USER}
