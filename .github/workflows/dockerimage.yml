@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${IMAGE_NAME}:${GITHUB_REF##*/}
+        run: docker build . --file Dockerfile --tag ${IMAGE_NAME}:${GITHUB_REF##*/} --build-arg BUILD_DATE=${BUILD_DATE} VERSION=${GITHUB_REF##*/}-${BUILD_DATE}
         env:
           IMAGE_NAME: provider_kill_mission
+          BUILD_DATE: $(date '+%Y-%m-%d %H:%M:%S')
