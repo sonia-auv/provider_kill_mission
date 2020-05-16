@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: provider_kill_mission
+      GITHUB_REMOTE_URL: docker.pkg.github.com
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
@@ -22,9 +23,9 @@ jobs:
 
       - name: Create Docker image tag
         run: |
-          docker tag build-feature-${GITHUB_REF##*/} docker.pkg.github.com/${{ github.repository }}:feature-${GITHUB_REF##*/}
+          docker tag build-feature-${GITHUB_REF##*/} docker.pkg.github.com/${{ github.repository }}/${{ github.repository }}:feature-${GITHUB_REF##*/}
 
       - name: Push image to Github Packages Registry
         run: |
           docker images
-          docker push docker.pkg.github.com/${{ github.repository }}:feature-${GITHUB_REF##*/}
+          docker push docker.pkg.github.com/${{ github.repository }}/${{ github.repository }}:feature-${GITHUB_REF##*/}
