@@ -9,12 +9,12 @@ jobs:
     name: "Build docker image"
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: sonia-auv/provider_kill_mission
+      IMAGE_NAME: provider_kill_mission
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: |
-          docker build . --file Dockerfile --tag ${IMAGE_NAME}:feature-${GITHUB_REF##*/} docker.pkg.github.com/${{ github.repository }}:feature-${GITHUB_REF##*/} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
+          docker build . --file Dockerfile --tag docker.pkg.github.com/sonia-auv/provider_kill_mission/${IMAGE_NAME}:feature-${GITHUB_REF##*/} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
 
       - name: Log into Github Package Registry
         run: |
