@@ -15,8 +15,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: |
-          echo ${GITHUB_REMOTE_URL}
-          docker build . --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
+          docker build . --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
+      - name: Run Unit test
+        run: |
+          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
 
       - name: Log into Github Package Registry
         run: |
@@ -28,5 +30,4 @@ jobs:
 
       - name: Push image to Github Packages Registry
         run: |
-          docker images
           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
