@@ -22,7 +22,7 @@ jobs:
 
       - name: Create Docker image tag
         run: |
-          docker tag build-feature-${GITHUB_REF##*/} ${{ github.repository }}:feature-${GITHUB_REF##*/}
+          docker tag build-feature-${GITHUB_REF##*/} docker.pkg.github.com/${{ github.repository }}:feature-${GITHUB_REF##*/}
 
       - name: Push image to Github Packages Registry
         run: |
