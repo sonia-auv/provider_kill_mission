@@ -23,7 +23,7 @@ jobs:
 
       - name: Login to Github Package Registry
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }}
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Create Docker Image Tag
         run: |
@@ -33,13 +33,22 @@ jobs:
         run: |
           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
 
-  slack-notify:
-    needs: build
-    name: Slack Notification
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2.0.2
+      - name: Notify slack success
+        if: success()
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-ci-notifications
+          status: SUCCESS
+          color: good
+
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-ci-notifications
+          status: FAILED
+          color: danger
