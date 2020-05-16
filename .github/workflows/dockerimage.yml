@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI - Feature Branch
 
 on:
   push:
@@ -16,11 +16,14 @@ jobs:
         run: |
           docker build . --file Dockerfile --tag ${IMAGE_NAME}:${GITHUB_REF##*/} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
 
-      - name: Log into registry
+      - name: Log into github package registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
+      - name: Tag docker image
         run: |
-          docker tag image ${IMAGE_NAME}:feature/${GITHUB_REF##*/}
-          docker push ${IMAGE_NAME}:feature/${GITHUB_REF##*/}
+          docker tag image docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:feature/${GITHUB_REF##*/}
+
+      - name: Push image to github packages
+        run: |
+          docker push docker.pkg.github.com/${{ github.repository }}/${IMAGE_NAME}:feature/${GITHUB_REF##*/}
