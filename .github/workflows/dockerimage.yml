@@ -14,11 +14,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: |
-          docker build . --file Dockerfile --tag ${{ github.repository }}:feature-${GITHUB_REF##*/} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
+          docker build . --file Dockerfile --tag build-feature-${GITHUB_REF##*/} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '+%Y-%m-%d_%H:%M:%S')
 
       - name: Log into Github Package Registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+     - name: Create Docker image tag
+       run: |
+            docker tag build-feature-${GITHUB_REF##*/} ${{ github.repository }}:feature-${GITHUB_REF##*/}
 
       - name: Push image to Github Packages Registry
         run: |
