@@ -16,18 +16,30 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
-      - name: Run Unit test
+
+      - name: Run Module Unit Test
         run: |
           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
 
-      - name: Log into Github Package Registry
+      - name: Login to Github Package Registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Create Docker image tag
+      - name: Create Docker Image Tag
         run: |
           docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
 
-      - name: Push image to Github Packages Registry
+      - name: Push Image to Github Packages Registry
         run: |
           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
+
+  slack-notify:
+    needs: build
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
