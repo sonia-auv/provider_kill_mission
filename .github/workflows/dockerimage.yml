@@ -9,7 +9,7 @@ jobs:
     name: "Build docker image"
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: provider_kill_mission
+      IMAGE_NAME: sonia-auv/provider_kill_mission
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
