@@ -20,9 +20,9 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-     - name: Create Docker image tag
-       run: |
-            docker tag build-feature-${GITHUB_REF##*/} ${{ github.repository }}:feature-${GITHUB_REF##*/}
+      - name: Create Docker image tag
+        run: |
+          docker tag build-feature-${GITHUB_REF##*/} ${{ github.repository }}:feature-${GITHUB_REF##*/}
 
       - name: Push image to Github Packages Registry
         run: |
