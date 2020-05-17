@@ -23,7 +23,7 @@ jobs:
 
       - name: Login to Github Package Registry
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }}
 
       - name: Create Docker Image Tag
         run: |
@@ -33,7 +33,7 @@ jobs:
         run: |
           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
 
-      - name: Notify slack success
+      - name: Notify Slack Success
         if: success()
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
           status: SUCCESS
           color: good
 
-      - name: Notify slack fail
+      - name: Notify Slack Fail
         if: failure()
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
