@@ -35,6 +35,5 @@ RUN bash -c "source ${ROS_WS_SETUP}; catkin_make"
 RUN chown -R ${SONIA_USER}: ${SONIA_WS}
 USER ${SONIA_USER}
 
-#TODO: Review ENTRYPOINT + CMD path
 ENTRYPOINT ["/home/sonia/ros_sonia_ws/provider_kill_mission/script/sonia_entrypoint.sh"]
 CMD ["roslaunch", "/home/sonia/ros_sonia_ws/provider_kill_mission/launch/provider_kill_mission.launch"]
