@@ -20,6 +20,7 @@ jobs:
 
       - name: Run Module Unit Test
         run: |
+          docker images
           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
 
