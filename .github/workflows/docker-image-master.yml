@@ -33,7 +33,6 @@ jobs:
           git push origin --tags
       - name: Create Docker Image Tag
         run: |
-          PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
           docker tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${PACKAGE_VERSION}
       - name: Push Image to Github Packages Registry
         run: |
