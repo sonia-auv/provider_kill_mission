@@ -11,7 +11,6 @@ jobs:
     env:
       IMAGE_NAME: provider_kill_mission
       GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
-      PACKAGE_VERSION: 0.0.0
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
@@ -31,6 +30,7 @@ jobs:
       - name: Create Git Tag
         run: |
           PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
+          echo ${PACKAGE_VERSION}
           git tag ${PACKAGE_VERSION}
           git push origin --tags
 
