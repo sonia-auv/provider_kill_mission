@@ -1,0 +1,55 @@
+name: Docker Image CI - Feature Branch
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build:
+    name: "Build docker image"
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: provider_kill_mission
+      GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: |
+          docker build . --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
+
+      - name: Run Module Unit Test
+        run: |
+          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
+          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
+
+      - name: Login to Github Package Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Create Docker Image Tag
+        run: |
+          docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:develop
+
+      - name: Push Image to Github Packages Registry
+        run: |
+          docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:develop
+
+      - name: Notify Slack Success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-ci-notifications
+          status: SUCCESS
+          color: good
+
+      - name: Notify Slack Fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-ci-notifications
+          status: FAILED
+          color: danger
