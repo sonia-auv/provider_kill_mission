@@ -16,13 +16,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: |
-          docker build . --tag build-master-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
+          docker build . --tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
 
       - name: Run Module Unit Test
         run: |
           docker images
-          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
-          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
+          docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
+          docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
 
       - name: Login to Github Package Registry
         run: |
