@@ -21,6 +21,7 @@ ENV MODULE_PATH=${SONIA_WS}/${MODULE_NAME}
 ENV LAUNCH_FILE=${MODULE_NAME}.launch
 ENV ENTRYPOINT_FILE=sonia_entrypoint.sh
 ENV LAUNCH_ABSPATH=${MODULE_PATH}/launch/${LAUNCH_FILE}
+ENV ENTRYPOINT_ABSPATH=${MODULE_PATH}/script/${ENTRYPOINT_FILE}
 
 ENV ROS_WS_SETUP=/opt/ros/${ROS_DISTRO}/setup.bash
 ENV SONIA_WS_SETUP=${SONIA_HOME}/ros_sonia_ws/devel/setup.bash
@@ -36,6 +37,8 @@ RUN bash -c "source ${ROS_WS_SETUP}; catkin_make"
 RUN chown -R ${SONIA_USER}: ${SONIA_WS}
 USER ${SONIA_USER}
 
+RUN echo "$ENTRYPOINT_ABSPATH" > ./entrypoint.sh
 RUN echo "roslaunch $LAUNCH_ABSPATH" > ./launch.sh
 
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
 CMD ["bin/bash", "./launch.sh"]
