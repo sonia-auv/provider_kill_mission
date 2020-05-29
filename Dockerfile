@@ -1,10 +1,12 @@
-FROM ros:melodic-robot
+FROM docker.pkg.github.com/sonia-auv/sonia_msgs/sonia_msgs_robot:1.0.7
+
+USER root
 
 ARG BUILD_DATE
 ARG VERSION
-ARG SONIA_USER=sonia
-ARG SONIA_UID=50000
-ARG MODULE_NAME=provider_kill_mission
+ENV SONIA_USER=sonia
+ENV SONIA_UID=50000
+ENV MODULE_NAME=provider_kill_mission
 
 LABEL maintainer="club.sonia@etsmtl.net"
 LABEL net.etsmtl.sonia-auv.build-date=${BUILD_DATE}
@@ -13,7 +15,7 @@ LABEL net.etsmtl.sonia-auv.name=${MODULE_NAME}
 
 
 ENV SONIA_HOME=/home/${SONIA_USER}
-ENV SONIA_WS=${SONIA_HOME}/ros_sonia_ws/
+ENV SONIA_WS=${SONIA_HOME}/ros_sonia_ws
 ENV SONIA_USER=${SONIA_USER}
 ENV SONIA_UID=${SONIA_UID}
 ENV MODULE_NAME=${MODULE_NAME}
@@ -26,7 +28,6 @@ ENV ENTRYPOINT_ABSPATH=${MODULE_PATH}/script/${ENTRYPOINT_FILE}
 ENV ROS_WS_SETUP=/opt/ros/${ROS_DISTRO}/setup.bash
 ENV SONIA_WS_SETUP=${SONIA_HOME}/ros_sonia_ws/devel/setup.bash
 
-RUN useradd --uid ${SONIA_UID} --create-home ${SONIA_USER}
 RUN bash -c 'mkdir -p ${SONIA_WS}/{launch,msg,script,src,srv}'
 
 WORKDIR ${SONIA_WS}
