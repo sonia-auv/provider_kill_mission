@@ -40,7 +40,7 @@ namespace provider_kill_mission {
             : nh_(nh) {
 
         rs485_publisherRx_ =
-                nh_->advertise<interface_rs485::SendRS485Msg>("/interface_rs485/dataRx", 100);
+                nh_->advertise<sonia_msgs::SendRS485Msg>("/interface_rs485/dataRx", 100);
 
         rs485_subscriberTx_ =
                 nh_->subscribe("/interface_rs485/dataTx", 100, &ProviderKillMissionNode::communication_data_callback, this);
@@ -80,21 +80,21 @@ namespace provider_kill_mission {
 
     void ProviderKillMissionNode::poll_kill_mission(){
 
-        interface_rs485::SendRS485Msg msg;
+        sonia_msgs::SendRS485Msg msg;
 
         msg.data.push_back(0x00);
 
-        msg.cmd = interface_rs485::SendRS485Msg::CMD_MISSION;
-        msg.slave = interface_rs485::SendRS485Msg::SLAVE_killMission;
+        msg.cmd = sonia_msgs::SendRS485Msg::CMD_MISSION;
+        msg.slave = sonia_msgs::SendRS485Msg::SLAVE_killMission;
         rs485_publisherRx_.publish(msg);
 
-        msg.cmd = interface_rs485::SendRS485Msg::CMD_KILL;
-        msg.slave = interface_rs485::SendRS485Msg::SLAVE_killMission;
+        msg.cmd = sonia_msgs::SendRS485Msg::CMD_KILL;
+        msg.slave = sonia_msgs::SendRS485Msg::SLAVE_killMission;
         rs485_publisherRx_.publish(msg);
 
     }
 
-    void ProviderKillMissionNode::communication_data_callback(const interface_rs485::SendRS485Msg::ConstPtr &receiveData){
+    void ProviderKillMissionNode::communication_data_callback(const sonia_msgs::SendRS485Msg::ConstPtr &receiveData){
 
         sonia_msgs::KillSwitchMsg kill_msg;
 

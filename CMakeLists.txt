@@ -32,7 +32,6 @@ find_package( catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
         sonia_msgs
-        interface_rs485
         )
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
@@ -42,7 +41,6 @@ catkin_package(
         roscpp
         std_msgs
         sonia_msgs
-        interface_rs485
 )
 
 

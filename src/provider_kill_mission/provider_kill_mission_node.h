@@ -32,7 +32,7 @@
 #define PROVIDER_KILL_MISSION_PROVIDER_KILL_MISSION_H
 
 #include <ros/ros.h>
-#include <interface_rs485/SendRS485Msg.h>
+#include <sonia_msgs/SendRS485Msg.h>
 #include <sonia_msgs/OverrideMissionSwitch.h>
 #include <sonia_msgs/SetMissionSwitch.h>
 #include <sonia_msgs/OverrideMissionSwitchResponse.h>
@@ -59,7 +59,7 @@ namespace provider_kill_mission {
         //============================================================================
         // P U B L I C   M E T H O D S
 
-        void communication_data_callback(const interface_rs485::SendRS485Msg::ConstPtr &receiveData);
+        void communication_data_callback(const sonia_msgs::SendRS485Msg::ConstPtr &receiveData);
 
         bool override_mission_switch_callback(sonia_msgs::OverrideMissionSwitch::Request &req,
                              sonia_msgs::OverrideMissionSwitch::Response &res);
