@@ -33,17 +33,17 @@
 
 #include <ros/ros.h>
 #include <interface_rs485/SendRS485Msg.h>
-#include <provider_kill_mission/OverrideMissionSwitch.h>
-#include <provider_kill_mission/SetMissionSwitch.h>
-#include <provider_kill_mission/OverrideMissionSwitchResponse.h>
-#include <provider_kill_mission/SetMissionSwitchResponse.h>
-#include <provider_kill_mission/GetOverrideMissionSwitch.h>
-#include <provider_kill_mission/GetOverrideMissionSwitchResponse.h>
-#include <provider_kill_mission/GetMissionSwitch.h>
-#include <provider_kill_mission/GetMissionSwitchResponse.h>
-#include <provider_kill_mission/GetKillSwitch.h>
-#include <provider_kill_mission/KillSwitchMsg.h>
-#include <provider_kill_mission/MissionSwitchMsg.h>
+#include <sonia_msgs/OverrideMissionSwitch.h>
+#include <sonia_msgs/SetMissionSwitch.h>
+#include <sonia_msgs/OverrideMissionSwitchResponse.h>
+#include <sonia_msgs/SetMissionSwitchResponse.h>
+#include <sonia_msgs/GetOverrideMissionSwitch.h>
+#include <sonia_msgs/GetOverrideMissionSwitchResponse.h>
+#include <sonia_msgs/GetMissionSwitch.h>
+#include <sonia_msgs/GetMissionSwitchResponse.h>
+#include <sonia_msgs/GetKillSwitch.h>
+#include <sonia_msgs/KillSwitchMsg.h>
+#include <sonia_msgs/MissionSwitchMsg.h>
 
 namespace provider_kill_mission {
 
@@ -61,20 +61,20 @@ namespace provider_kill_mission {
 
         void communication_data_callback(const interface_rs485::SendRS485Msg::ConstPtr &receiveData);
 
-        bool override_mission_switch_callback(provider_kill_mission::OverrideMissionSwitch::Request &req,
-                             provider_kill_mission::OverrideMissionSwitch::Response &res);
+        bool override_mission_switch_callback(sonia_msgs::OverrideMissionSwitch::Request &req,
+                             sonia_msgs::OverrideMissionSwitch::Response &res);
 
-        bool get_override_mission_switch_state(provider_kill_mission::GetOverrideMissionSwitch::Request &req,
-                                              provider_kill_mission::GetOverrideMissionSwitch::Response &res);
+        bool get_override_mission_switch_state(sonia_msgs::GetOverrideMissionSwitch::Request &req,
+                                              sonia_msgs::GetOverrideMissionSwitch::Response &res);
 
-        bool get_mission_switch_state(provider_kill_mission::GetMissionSwitch::Request &req,
-                                              provider_kill_mission::GetMissionSwitch::Response &res);
+        bool get_mission_switch_state(sonia_msgs::GetMissionSwitch::Request &req,
+                                              sonia_msgs::GetMissionSwitch::Response &res);
 
-        bool get_kill_switch_state(provider_kill_mission::GetKillSwitch::Request &req,
-                                              provider_kill_mission::GetKillSwitch::Response &res);
+        bool get_kill_switch_state(sonia_msgs::GetKillSwitch::Request &req,
+                                              sonia_msgs::GetKillSwitch::Response &res);
 
-        bool set_mission_switch_callback(provider_kill_mission::SetMissionSwitch::Request &req,
-                                              provider_kill_mission::SetMissionSwitch::Response &res);
+        bool set_mission_switch_callback(sonia_msgs::SetMissionSwitch::Request &req,
+                                              sonia_msgs::SetMissionSwitch::Response &res);
 
         void publish_mission_switch_state(bool data);
 
