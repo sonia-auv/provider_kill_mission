@@ -71,8 +71,7 @@ add_executable( ${TARGET_NAME}
         ${provider_kill_mission_SRC_DIR}/provider_kill_mission_node.cc)
 target_link_libraries( ${TARGET_NAME} ${catkin_LIBRARIES})
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
-add_dependencies(${PROJECT_NAME}_node
-        ${PROJECT_NAME}_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node ${catkin_EXPORTED_TARGETS})
 #==========================================================================
 # U N I T   T E S T S
 
