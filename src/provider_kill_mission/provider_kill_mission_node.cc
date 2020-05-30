@@ -46,10 +46,10 @@ namespace provider_kill_mission {
                 nh_->subscribe("/interface_rs485/dataTx", 100, &ProviderKillMissionNode::communication_data_callback, this);
 
         publisher_mission_ =
-                nh_->advertise<provider_kill_mission::MissionSwitchMsg>("/provider_kill_mission/mission_switch_msg", 100);
+                nh_->advertise<sonia_msgs::MissionSwitchMsg>("/provider_kill_mission/mission_switch_msg", 100);
 
         publisher_kill_ =
-                nh_->advertise<provider_kill_mission::KillSwitchMsg>("/provider_kill_mission/kill_switch_msg", 100);
+                nh_->advertise<sonia_msgs::KillSwitchMsg>("/provider_kill_mission/kill_switch_msg", 100);
 
         override_mission_switch_ = nh_->advertiseService("/provider_kill_mission/override_mission_switch",
                                                   &ProviderKillMissionNode::override_mission_switch_callback, this);
@@ -96,7 +96,7 @@ namespace provider_kill_mission {
 
     void ProviderKillMissionNode::communication_data_callback(const interface_rs485::SendRS485Msg::ConstPtr &receiveData){
 
-        provider_kill_mission::KillSwitchMsg kill_msg;
+        sonia_msgs::KillSwitchMsg kill_msg;
 
         uint8_t data;
 
@@ -123,7 +123,7 @@ namespace provider_kill_mission {
 
     void ProviderKillMissionNode::publish_mission_switch_state(bool data){
 
-        provider_kill_mission::MissionSwitchMsg missionmsg;
+        sonia_msgs::MissionSwitchMsg missionmsg;
         mission_switch_state = data;
 
         if ( std::abs(last_mission_switch_state - mission_switch_state )) {
@@ -137,8 +137,8 @@ namespace provider_kill_mission {
     }
 
     bool ProviderKillMissionNode::get_override_mission_switch_state(
-            provider_kill_mission::GetOverrideMissionSwitch::Request &req,
-            provider_kill_mission::GetOverrideMissionSwitch::Response &res) {
+            sonia_msgs::GetOverrideMissionSwitch::Request &req,
+            sonia_msgs::GetOverrideMissionSwitch::Response &res) {
 
         res.state = override_state;
 
@@ -148,8 +148,8 @@ namespace provider_kill_mission {
     }
 
     bool ProviderKillMissionNode::override_mission_switch_callback(
-            provider_kill_mission::OverrideMissionSwitch::Request &req,
-            provider_kill_mission::OverrideMissionSwitch::Response &res) {
+            sonia_msgs::OverrideMissionSwitch::Request &req,
+            sonia_msgs::OverrideMissionSwitch::Response &res) {
 
         override_state = req.state;
 
@@ -157,23 +157,23 @@ namespace provider_kill_mission {
 
     }
 
-    bool ProviderKillMissionNode::get_mission_switch_state(provider_kill_mission::GetMissionSwitch::Request &req,
-                                                           provider_kill_mission::GetMissionSwitch::Response &res) {
+    bool ProviderKillMissionNode::get_mission_switch_state(sonia_msgs::GetMissionSwitch::Request &req,
+                                                           sonia_msgs::GetMissionSwitch::Response &res) {
         res.state = mission_switch_state;
 
         return true;
     }
 
-    bool ProviderKillMissionNode::get_kill_switch_state(provider_kill_mission::GetKillSwitch::Request &req,
-                                                        provider_kill_mission::GetKillSwitch::Response &res) {
+    bool ProviderKillMissionNode::get_kill_switch_state(sonia_msgs::GetKillSwitch::Request &req,
+                                                        sonia_msgs::GetKillSwitch::Response &res) {
 
         res.state = kill_state;
 
         return true;
     }
 
-    bool ProviderKillMissionNode::set_mission_switch_callback(provider_kill_mission::SetMissionSwitch::Request &req,
-                                                              provider_kill_mission::SetMissionSwitch::Response &res) {
+    bool ProviderKillMissionNode::set_mission_switch_callback(sonia_msgs::SetMissionSwitch::Request &req,
+                                                              sonia_msgs::SetMissionSwitch::Response &res) {
 
         if (override_state){
 
