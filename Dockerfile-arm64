@@ -6,7 +6,7 @@ ARG BUILD_DATE
 ARG VERSION
 ENV SONIA_USER=sonia
 ENV SONIA_UID=50000
-ENV MODULE_NAME=<ENTER_YOUR_MODULE_NAME>
+ENV MODULE_NAME=provider_kill_mission
 
 LABEL maintainer="club.sonia@etsmtl.net"
 LABEL net.etsmtl.sonia-auv.build-date=${BUILD_DATE}
