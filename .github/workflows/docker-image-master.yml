@@ -5,7 +5,7 @@
      branches: [master]
  
  jobs:
-   build-ros-robot-x86-64:
+   build-x86-64:
      name: "Build X86/64"
      runs-on: ubuntu-latest
      env:
@@ -38,7 +38,7 @@
            PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
            docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}
  
-   build-ros-robot-arm64:
+   build-arm64:
      name: "Build ARM64"
      runs-on: ubuntu-latest
      env:
