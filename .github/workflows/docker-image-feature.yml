@@ -1,55 +1,116 @@
-name: Docker Image CI - Feature Branch
-
-on:
-  push:
-    branches: [feature/**]
-
-jobs:
-  build:
-    name: "Build docker image"
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: provider_kill_mission
-      GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: |
-          docker build . --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
-
-      - name: Run Module Unit Test
-        run: |
-          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
-          docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
-
-      - name: Login to Github Package Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Create Docker Image Tag
-        run: |
-          docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
-
-      - name: Push Image to Github Packages Registry
-        run: |
-          docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
-
-      - name: Notify Slack Success
-        if: success()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: github-ci-notifications
-          status: SUCCESS
-          color: good
-
-      - name: Notify Slack Fail
-        if: failure()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: github-ci-notifications
-          status: FAILED
-          color: danger
+ name: Docker Image CI - Feature Branch
+ 
+ on:
+   push:
+     branches: [feature/**]
+ 
+ jobs:
+   build-ros-robot-x86-64:
+     name: "Build X86/64"
+     runs-on: ubuntu-latest
+     env:
+       IMAGE_NAME: provider_kill_mission_x86_64
+       DOCKERFILE: Dockerfile-x86_64
+       GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
+     steps:
+       - uses: actions/checkout@v2
+       - name: Login to Github Package Registry
+         run: |
+           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+ 
+       - name: Build the docker image (x86_64 based)
+         run: |
+           docker build . --file ${DOCKERFILE} --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
+ 
+       - name: Run Module Unit Test
+         run: |
+           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
+           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
+ 
+       - name: Create Docker Image Tag
+         run: |
+           docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
+ 
+       - name: Push Image to Github Packages Registry
+         run: |
+           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
+ 
+   build-ros-robot-arm64:
+     name: "Build ARM64"
+     runs-on: ubuntu-latest
+     env:
+       IMAGE_NAME: provider_kill_mission_arm64
+       DOCKERFILE: Dockerfile-arm64
+       GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
+     steps:
+       - uses: actions/checkout@v2
+       - name: Enable Docker Daemon Experimental Features
+         run: |
+           sudo rm /etc/docker/daemon.json
+           echo '{"experimental": true , "cgroup-parent": "/actions_job" }' | sudo tee -a /etc/docker/daemon.json
+           sudo service docker restart
+           docker version
+ 
+       - name: Install QEMU to be able to compile on X86 into ARM64
+         run: |
+           sudo apt-get install qemu binfmt-support qemu-user-static
+           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+           
+       - name: Login to Github Package Registry
+         run: |
+           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+ 
+       - name: Build the docker image (ARM64 based)
+         run: |
+           docker build . --file ${DOCKERFILE} --platform arm64 --tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
+ 
+       - name: Run Module Unit Test
+         run: |
+           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
+           docker run build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
+ 
+       - name: Create Docker Image Tag
+         run: |
+           docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
+ 
+       - name: Push Image to Github Packages Registry
+         run: |
+           docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:feature-${GITHUB_REF##*/}
+ 
+   notify-success:
+     name: "Notify Slack - Success"
+     runs-on: ubuntu-latest
+     needs:
+       [
+         build-x86-64,
+         build-arm64,
+       ]
+     if: success()
+     steps:
+       - name: Notify Slack Success
+         env:
+           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+         uses: voxmedia/github-action-slack-notify-build@v1
+         with:
+           channel: github-ci-notifications
+           status: SUCCESS
+           color: good
+ 
+   notify-fail:
+     name: "Notify Slack - Failure"
+     runs-on: ubuntu-latest
+     needs:
+       [
+         build-x86-64,
+         build-arm64,
+       ]
+     if: failure()
+     steps:
+       - name: Notify Slack Fail
+         env:
+           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+         uses: voxmedia/github-action-slack-notify-build@v1
+         with:
+           channel: github-ci-notifications
+           status: FAILED
+           color: danger
