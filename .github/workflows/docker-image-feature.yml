@@ -10,7 +10,7 @@
      runs-on: ubuntu-latest
      env:
        IMAGE_NAME: provider_kill_mission_x86_64
-       DOCKERFILE: Dockerfile-x86_64
+       DOCKERFILE: Dockerfile-x86-64
        GITHUB_REMOTE_URL: docker.pkg.github.com/${{ github.repository }}
      steps:
        - uses: actions/checkout@v2
