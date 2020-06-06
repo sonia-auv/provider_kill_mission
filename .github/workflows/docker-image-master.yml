@@ -1,9 +1,9 @@
  name: Docker Image CI - Master Branch
- 
+
  on:
    push:
      branches: [master]
- 
+
  jobs:
    build-x86-64:
      name: "Build X86/64"
@@ -17,27 +17,27 @@
        - name: Login to Github Package Registry
          run: |
            echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
- 
+
        - name: Build the docker image (x86_64 based)
          run: |
            docker build . --file ${DOCKERFILE} --tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
- 
+
        - name: Run Module Unit Test
          run: |
            docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
            docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
- 
+
        - name: Create Docker Image Tag
          run: |
            PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
            docker tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${PACKAGE_VERSION}
            docker tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:latest
- 
+
        - name: Push Image to Github Packages Registry
          run: |
            PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
            docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}
- 
+
    build-arm64:
      name: "Build ARM64"
      runs-on: ubuntu-latest
@@ -53,36 +53,36 @@
            echo '{"experimental": true , "cgroup-parent": "/actions_job" }' | sudo tee -a /etc/docker/daemon.json
            sudo service docker restart
            docker version
- 
+
        - name: Install QEMU to be able to compile on X86 into ARM64
          run: |
            sudo apt-get install qemu binfmt-support qemu-user-static
            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
- 
+
        - name: Login to Github Package Registry
          run: |
            echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
- 
+
        - name: Build the docker image (ARM64 based)
          run: |
            docker build . --file ${DOCKERFILE} --platform arm64 --tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} --build-arg BUILD_DATE=$(date '+%Y-%m-%d_%H:%M:%S') --build-arg VERSION=${GITHUB_REF##*/}-$(date '  +%Y-%m-%d_%H:%M:%S')
- 
+
        - name: Run Module Unit Test
          run: |
            docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make run_tests
            docker run build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} catkin_make tests
- 
+
        - name: Create Docker Image Tag
          run: |
            PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
            docker tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${PACKAGE_VERSION}
            docker tag build-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:latest
- 
+
        - name: Push Image to Github Packages Registry
          run: |
            PACKAGE_VERSION=$(sed -n -e 's/.*<version>\(.*\)<\/version>.*/\1/p' package.xml)
            docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}
- 
+
    create-release:
      name: "Create Github Release"
      runs-on: ubuntu-latest
@@ -99,7 +99,7 @@
            echo "::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION"
            git tag ${PACKAGE_VERSION}
            git push origin --tags
- 
+
        - name: Create Github Release
          uses: actions/create-release@v1
          env:
@@ -111,7 +111,7 @@
              A new release for this package has been created
            draft: false
            prerelease: false
- 
+
    notify-success:
      name: "Notify Slack - Success"
      runs-on: ubuntu-latest
@@ -131,7 +131,7 @@
            channel: github-ci-notifications
            status: SUCCESS
            color: good
- 
+
    notify-fail:
      name: "Notify Slack - Failure"
      runs-on: ubuntu-latest
