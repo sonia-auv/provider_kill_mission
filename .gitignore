@@ -163,3 +163,5 @@ rosstack*
 rosdep
 cmake-build-debug/
 
+#Apple
+.DS_Store

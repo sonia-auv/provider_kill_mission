@@ -31,24 +31,8 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 find_package( catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
-        message_generation
-        interface_rs485
+        sonia_msgs
         )
-
-add_service_files(DIRECTORY srv FILES
-        GetMissionSwitch.srv
-        GetOverrideMissionSwitch.srv
-        OverrideMissionSwitch.srv
-        SetMissionSwitch.srv
-        GetKillSwitch.srv)
-
-add_message_files(DIRECTORY msg
-                  FILES
-                  KillSwitchMsg.msg
-                  MissionSwitchMsg.msg)
-
-generate_messages(DEPENDENCIES std_msgs)
-
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
         INCLUDE_DIRS src
@@ -56,8 +40,7 @@ catkin_package(
         CATKIN_DEPENDS
         roscpp
         std_msgs
-        message_runtime
-        interface_rs485
+        sonia_msgs
 )
 
 
@@ -88,8 +71,7 @@ add_executable( ${TARGET_NAME}
         ${provider_kill_mission_SRC_DIR}/provider_kill_mission_node.cc)
 target_link_libraries( ${TARGET_NAME} ${catkin_LIBRARIES})
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
-add_dependencies(${PROJECT_NAME}_node
-        ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME}_node ${catkin_EXPORTED_TARGETS})
 #==========================================================================
 # U N I T   T E S T S
 
