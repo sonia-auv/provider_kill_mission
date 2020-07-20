@@ -19,7 +19,7 @@
 		"--network",
 		"host"
 	],
-        "mounts": [
+       	"mounts": [
 		"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
 	],
 	"workspaceMount": "target=/home/sonia/ros_sonia_ws/src/provider_kill_mission,type=bind,consistency=cached",
