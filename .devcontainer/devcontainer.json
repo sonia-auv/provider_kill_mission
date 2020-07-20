@@ -14,7 +14,7 @@
 	"extensions": [
 		"ms-iot.vscode-ros"
 	],
-	"workspaceMount": "source=${localWorkspaceFolder},target=/home/sonia/ros_sonia_ws/src/provider_kill_mission,type=bind,consistency=cached",
+	"workspaceMount": "target=/home/sonia/ros_sonia_ws/src/provider_kill_mission,type=bind,consistency=cached",
 	"workspaceFolder": "/home/sonia/ros_sonia_ws/src/provider_kill_mission"
 }
 
