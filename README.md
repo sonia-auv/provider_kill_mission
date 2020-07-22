@@ -1,12 +1,12 @@
 # provider_kill_mission
 
+Provider kill mission is an hardware node that does handle signal from and to kill and mission switches
+
 ![Docker Image CI - Master Branch](https://github.com/sonia-auv/provider_kill_mission/workflows/Docker%20Image%20CI%20-%20Master%20Branch/badge.svg)
 ![Docker Image CI - Develop Branch](https://github.com/sonia-auv/provider_kill_mission/workflows/Docker%20Image%20CI%20-%20Develop%20Branch/badge.svg?branch=develop)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/sonia-auv/provider_kill_mission)
 ![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/sonia-auv/provider_kill_mission.svg)
 
-
-Provider kill mission is an hardware node that does handle signal from and to kill and mission switches
 
 ## Getting Started
 
