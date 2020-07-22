@@ -6,12 +6,11 @@
 ![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/sonia-auv/provider_kill_mission.svg)
 
 
-*Please read the instructions and fill in the blanks*
-
-
-One Paragraph of project description goes here
+Provider kill mission is an hardware node that does handle signal from and to kill and mission switches
 
 ## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 Clone current project by using following command :
 ```bash
