@@ -32,18 +32,18 @@
 #define PROVIDER_KILL_MISSION_PROVIDER_KILL_MISSION_H
 
 #include <ros/ros.h>
-#include <sonia_msgs/SendRS485Msg.h>
-#include <sonia_msgs/OverrideMissionSwitch.h>
-#include <sonia_msgs/SetMissionSwitch.h>
-#include <sonia_msgs/OverrideMissionSwitchResponse.h>
-#include <sonia_msgs/SetMissionSwitchResponse.h>
-#include <sonia_msgs/GetOverrideMissionSwitch.h>
-#include <sonia_msgs/GetOverrideMissionSwitchResponse.h>
-#include <sonia_msgs/GetMissionSwitch.h>
-#include <sonia_msgs/GetMissionSwitchResponse.h>
-#include <sonia_msgs/GetKillSwitch.h>
-#include <sonia_msgs/KillSwitchMsg.h>
-#include <sonia_msgs/MissionSwitchMsg.h>
+#include <sonia_common/SendRS485Msg.h>
+#include <sonia_common/OverrideMissionSwitch.h>
+#include <sonia_common/SetMissionSwitch.h>
+#include <sonia_common/OverrideMissionSwitchResponse.h>
+#include <sonia_common/SetMissionSwitchResponse.h>
+#include <sonia_common/GetOverrideMissionSwitch.h>
+#include <sonia_common/GetOverrideMissionSwitchResponse.h>
+#include <sonia_common/GetMissionSwitch.h>
+#include <sonia_common/GetMissionSwitchResponse.h>
+#include <sonia_common/GetKillSwitch.h>
+#include <sonia_common/KillSwitchMsg.h>
+#include <sonia_common/MissionSwitchMsg.h>
 
 namespace provider_kill_mission {
 
@@ -59,22 +59,22 @@ namespace provider_kill_mission {
         //============================================================================
         // P U B L I C   M E T H O D S
 
-        void communication_data_callback(const sonia_msgs::SendRS485Msg::ConstPtr &receiveData);
+        void communication_data_callback(const sonia_common::SendRS485Msg::ConstPtr &receiveData);
 
-        bool override_mission_switch_callback(sonia_msgs::OverrideMissionSwitch::Request &req,
-                             sonia_msgs::OverrideMissionSwitch::Response &res);
+        bool override_mission_switch_callback(sonia_common::OverrideMissionSwitch::Request &req,
+                             sonia_common::OverrideMissionSwitch::Response &res);
 
-        bool get_override_mission_switch_state(sonia_msgs::GetOverrideMissionSwitch::Request &req,
-                                              sonia_msgs::GetOverrideMissionSwitch::Response &res);
+        bool get_override_mission_switch_state(sonia_common::GetOverrideMissionSwitch::Request &req,
+                                              sonia_common::GetOverrideMissionSwitch::Response &res);
 
-        bool get_mission_switch_state(sonia_msgs::GetMissionSwitch::Request &req,
-                                              sonia_msgs::GetMissionSwitch::Response &res);
+        bool get_mission_switch_state(sonia_common::GetMissionSwitch::Request &req,
+                                              sonia_common::GetMissionSwitch::Response &res);
 
-        bool get_kill_switch_state(sonia_msgs::GetKillSwitch::Request &req,
-                                              sonia_msgs::GetKillSwitch::Response &res);
+        bool get_kill_switch_state(sonia_common::GetKillSwitch::Request &req,
+                                              sonia_common::GetKillSwitch::Response &res);
 
-        bool set_mission_switch_callback(sonia_msgs::SetMissionSwitch::Request &req,
-                                              sonia_msgs::SetMissionSwitch::Response &res);
+        bool set_mission_switch_callback(sonia_common::SetMissionSwitch::Request &req,
+                                              sonia_common::SetMissionSwitch::Response &res);
 
         void publish_mission_switch_state(bool data);
 
