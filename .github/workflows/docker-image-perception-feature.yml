@@ -26,7 +26,7 @@ jobs:
           docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${ARCH}-${TARGET_TYPE}-${TARGET_VERSION}-${GITHUB_REF##*/}
       - name: Push Image to Github Packages Registry
         run: |
-          docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${ARCH}-${TARGET_TYPE}-${TARGET_VERSION}-${GITHUB_REF##*/}
+          docker push --all-tags ${GITHUB_REMOTE_URL}/${IMAGE_NAME}
   build-ros-perception-arm64:
     name: "Build ROS perception ARM64"
     runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
           docker tag build-feature-${GITHUB_REF##*/}-${GITHUB_RUN_NUMBER} ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${ARCH}-${TARGET_TYPE}-${TARGET_VERSION}-${GITHUB_REF##*/}
       - name: Push Image to Github Packages Registry
         run: |
-          docker push ${GITHUB_REMOTE_URL}/${IMAGE_NAME}:${ARCH}-${TARGET_TYPE}-${TARGET_VERSION}-${GITHUB_REF##*/}
+          docker push --all-tags ${GITHUB_REMOTE_URL}/${IMAGE_NAME}
   notify-success:
     name: "Notify Slack - Success"
     runs-on: ubuntu-latest
