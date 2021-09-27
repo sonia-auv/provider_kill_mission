@@ -85,11 +85,11 @@ namespace provider_kill_mission {
         msg.data.push_back(0x00);
 
         msg.cmd = sonia_common::SendRS485Msg::CMD_MISSION;
-        msg.slave = sonia_common::SendRS485Msg::SLAVE_killMission;
+        msg.slave = sonia_common::SendRS485Msg::SLAVE_KILLMISSION;
         rs485_publisherRx_.publish(msg);
 
         msg.cmd = sonia_common::SendRS485Msg::CMD_KILL;
-        msg.slave = sonia_common::SendRS485Msg::SLAVE_killMission;
+        msg.slave = sonia_common::SendRS485Msg::SLAVE_KILLMISSION;
         rs485_publisherRx_.publish(msg);
 
     }
@@ -100,7 +100,7 @@ namespace provider_kill_mission {
 
         uint8_t data;
 
-        if (receiveData->slave == receiveData->SLAVE_killMission){
+        if (receiveData->slave == receiveData->SLAVE_KILLMISSION){
 
             data = receiveData->data[0];
 
