@@ -46,10 +46,10 @@ namespace provider_kill_mission {
                 nh_->subscribe("/interface_rs485/dataTx", 100, &ProviderKillMissionNode::communication_data_callback, this);
 
         publisher_mission_ =
-                nh_->advertise<sonia_common::MissionSwitchMsg>("/provider_kill_mission/mission_switch_msg", 100);
+                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/mission_switch_msg", 100);
 
         publisher_kill_ =
-                nh_->advertise<sonia_common::KillSwitchMsg>("/provider_kill_mission/kill_switch_msg", 100);
+                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/kill_switch_msg", 100);
 
         override_mission_switch_ = nh_->advertiseService("/provider_kill_mission/override_mission_switch",
                                                   &ProviderKillMissionNode::override_mission_switch_callback, this);
@@ -96,7 +96,7 @@ namespace provider_kill_mission {
 
     void ProviderKillMissionNode::communication_data_callback(const sonia_common::SendRS485Msg::ConstPtr &receiveData){
 
-        sonia_common::KillSwitchMsg kill_msg;
+        std_msgs::Bool kill_msg;
 
         uint8_t data;
 
@@ -110,7 +110,7 @@ namespace provider_kill_mission {
 
             }else if (receiveData->cmd == receiveData->CMD_KILL){
                 kill_state = data;
-                kill_msg.state = kill_state;
+                kill_msg.data = kill_state;
 
                 publisher_kill_.publish(kill_msg);
 
@@ -123,13 +123,13 @@ namespace provider_kill_mission {
 
     void ProviderKillMissionNode::publish_mission_switch_state(bool data){
 
-        sonia_common::MissionSwitchMsg missionmsg;
+        std_msgs::Bool mission_msg;
         mission_switch_state = data;
 
         if ( std::abs(last_mission_switch_state - mission_switch_state )) {
 
-            missionmsg.state = data;
-            publisher_mission_.publish(missionmsg);
+            mission_msg.data = data;
+            publisher_mission_.publish(mission_msg);
 
         }
 
