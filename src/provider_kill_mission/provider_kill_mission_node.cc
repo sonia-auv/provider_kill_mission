@@ -88,6 +88,8 @@ namespace provider_kill_mission {
         msg.slave = sonia_common::SendRS485Msg::SLAVE_KILLMISSION;
         rs485_publisherRx_.publish(msg);
 
+        ros::Duration(0.3).sleep();
+
         msg.cmd = sonia_common::SendRS485Msg::CMD_KILL;
         msg.slave = sonia_common::SendRS485Msg::SLAVE_KILLMISSION;
         rs485_publisherRx_.publish(msg);
