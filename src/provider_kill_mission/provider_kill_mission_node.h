@@ -32,6 +32,8 @@
 #define PROVIDER_KILL_MISSION_PROVIDER_KILL_MISSION_H
 
 #include <ros/ros.h>
+#include "std_msgs/Bool.h"
+
 #include <sonia_common/SendRS485Msg.h>
 #include <sonia_common/OverrideMissionSwitch.h>
 #include <sonia_common/SetMissionSwitch.h>
@@ -42,8 +44,6 @@
 #include <sonia_common/GetMissionSwitch.h>
 #include <sonia_common/GetMissionSwitchResponse.h>
 #include <sonia_common/GetKillSwitch.h>
-#include <sonia_common/KillSwitchMsg.h>
-#include <sonia_common/MissionSwitchMsg.h>
 
 namespace provider_kill_mission {
 
