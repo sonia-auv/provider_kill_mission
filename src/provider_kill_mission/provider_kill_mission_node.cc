@@ -46,10 +46,10 @@ namespace provider_kill_mission {
                 nh_->subscribe("/interface_rs485/dataTx", 100, &ProviderKillMissionNode::communication_data_callback, this);
 
         publisher_mission_ =
-                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/mission_switch_msg", 100);
+                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/mission_switch_msg", 100, true);
 
         publisher_kill_ =
-                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/kill_switch_msg", 100);
+                nh_->advertise<std_msgs::Bool>("/provider_kill_mission/kill_switch_msg", 100, true);
 
         override_mission_switch_ = nh_->advertiseService("/provider_kill_mission/override_mission_switch",
                                                   &ProviderKillMissionNode::override_mission_switch_callback, this);
