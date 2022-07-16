@@ -100,18 +100,13 @@ namespace provider_kill_mission {
 
         std_msgs::Bool kill_msg;
 
-        uint8_t data;
-
         if (receiveData->slave == receiveData->SLAVE_KILLMISSION){
-
-            data = receiveData->data[0];
-
             if (receiveData->cmd == receiveData->CMD_MISSION && ! override_state){
 
-                publish_mission_switch_state(data == 1);
+                publish_mission_switch_state(receiveData->data[0] == 1);
 
             }else if (receiveData->cmd == receiveData->CMD_KILL){
-                kill_state = data;
+                kill_state = receiveData->data[0];
                 kill_msg.data = kill_state;
 
                 publisher_kill_.publish(kill_msg);
